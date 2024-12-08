@@ -10,7 +10,7 @@ const Navbar = () => {
       </div>
       <div className="flex gap-4 items-center">
         <h3 className="text-[18px] ">Sachin K</h3>
-        <Avatar className="border-2 border-blue-700 h-[45px] w-[45px]">
+        <Avatar className="border-2 border-main2 h-[45px] w-[45px]">
           <AvatarImage
             src="https://github.com/shadcn.png"
             height={70}
