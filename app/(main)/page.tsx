@@ -76,10 +76,8 @@ const rooms = [
 ];
 export default function Home() {
   return (
-    <div className="text-lg">
-      <div className="border-b ">
-        <Navbar />
-      </div>
+    <div className="">
+     
       <div className="container  mx-auto">
         <div className="flex items-center justify-between my-5 mx-1">
           <div className="flex items-center relative">
@@ -112,8 +110,7 @@ export default function Home() {
             </Button>
           </div>
         </div>
-        <div
-          className={
+        <div className={
             "grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4 mt-10"
           }
         >
