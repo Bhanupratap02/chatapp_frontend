@@ -35,8 +35,8 @@ const AddRoomModal = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center">
-      <div className="w-full max-w-md md:max-w-[35rem] bg-gray-800 text-white rounded-lg relative shadow-lg">
+    <div className="fixed inset-0 z-50 bg-black/80 bg-opacity-70 flex items-center justify-center">
+      <div className="w-full max-w-md md:max-w-[35rem] bg-[#1d1d1d] text-white rounded-lg relative shadow-lg">
         <button
           onClick={onClose}
           className="absolute top-3 right-3 bg-transparent p-2 z-50"

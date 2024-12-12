@@ -9,7 +9,7 @@ const Navbar = () => {
         <img src="/images/logo.png" alt="logo" />
         <span className="ml-2 text-xl">Codershouse</span>
       </Link>
-      <div className="flex gap-4 items-center">
+      <Link href={"/profile"} className="flex gap-4 items-center">
         <h3 className="text-[18px] ">Sachin K</h3>
         <Avatar className="border-2 border-main2 h-[45px] w-[45px]">
           <AvatarImage
@@ -20,7 +20,7 @@ const Navbar = () => {
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-      </div>
+      </Link>
     </nav>
   );
 };

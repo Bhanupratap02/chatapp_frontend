@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import RoomCard from "@/components/RoomCard";
 import { Button } from "@/components/ui/button";
 import { Lock, UserPen } from "lucide-react";
-
+import { UpdatePasswordModal } from "./_components/UpdatePasswordModal";
 const UserProfile = () => {
   const [user, setUser] = useState({
     id: 1,
@@ -19,6 +19,7 @@ const UserProfile = () => {
     { id: 1, name: "React Developers", type: "Public" },
     { id: 2, name: "Node.js Enthusiasts", type: "Private" },
   ]);
+  
 
   const handleUpdatePassword = () => {
     // Handle password update logic
@@ -49,10 +50,11 @@ const UserProfile = () => {
 
         {/* Update Options */}
         <div className=" space-y-4 ">
-          <Button className="px-4 py-2 w-2/3  rounded-full font-medium">
+          {/* <Button className="px-4 py-2 w-2/3  rounded-full font-medium">
             <Lock />
             Update Password
-          </Button>
+          </Button> */}
+          <UpdatePasswordModal/>
           <Button className="px-4 py-2 w-2/3 rounded-full bg-main text-black font-medium hover:bg-main hover:opacity-85">
             <UserPen />
             Update Profile Picture
