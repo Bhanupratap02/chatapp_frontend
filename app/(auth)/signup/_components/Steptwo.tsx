@@ -1,6 +1,5 @@
 /** @format */
 
-
 import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,43 +10,45 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useUsernameCheck } from "@/hooks/useUsernameCheck";
 import { useState, useEffect } from "react";
 const StepTwo = () => {
-  const { control, setValue } = useFormContext();
-  const [username, setUsername] = useState("");
-  const [isChecking, setIsChecking] = useState(false);
-  const [isAvailable, setIsAvailable] = useState<null | boolean>(null);
+  const { control, setValue,watch } = useFormContext();
+  // const [username, setUsername] = useState("");
+  // const [isChecking, setIsChecking] = useState(false);
+  // const [isAvailable, setIsAvailable] = useState<null | boolean>(null);
   // Use the custom debounce hook
+  const username = watch("username");
   const debouncedUsername = useDebounce(username, 500);
-    useEffect(() => {
-      if (!debouncedUsername) {
-        setIsAvailable(null);
-        return;
-      }
+  const { data, isLoading } = useUsernameCheck(debouncedUsername);
+  // useEffect(() => {
+  //   if (!debouncedUsername) {
+  //     setIsAvailable(null);
+  //     return;
+  //   }
 
-      const checkUsernameAvailability = async () => {
-        setIsChecking(true);
-        try {
-        //   const response = await fetch(
-        //     `/api/check-username?username=${debouncedUsername}`
-        //   );
-        //   const data = await response.json();
-        //   setIsAvailable(data.isAvailable);
-         setIsAvailable(true);
-        } catch (error) {
-          console.error("Error checking username:", error);
-          setIsAvailable(null);
-        } finally {
-          setIsChecking(false);
-        }
-      };
+  //   const checkUsernameAvailability = async () => {
+  //     setIsChecking(true);
+  //     try {
+  //         const response = await fetch(
+  //           `/api/check-username?username=${debouncedUsername}`
+  //         );
+  //         const data = await response.json();
+  //         setIsAvailable(data.isAvailable);
+  //       setIsAvailable(true);
+  //     } catch (error) {
+  //       console.error("Error checking username:", error);
+  //       setIsAvailable(null);
+  //     } finally {
+  //       setIsChecking(false);
+  //     }
+  //   };
 
-      checkUsernameAvailability();
-    }, [debouncedUsername]);
-  const handleUsernameChange = (value: string) => {
-    setUsername(value);
-    setValue("username", value); // Update the form context
-  };
+  //   checkUsernameAvailability();
+  // }, [debouncedUsername]);
+ const handleUsernameChange = (value: string) => {
+   setValue("username", value);
+ };
   return (
     <>
       <FormField
@@ -76,17 +77,17 @@ const StepTwo = () => {
             <FormControl>
               <Input
                 placeholder="Choose a username"
-                value={username || field.value}
+                {...field}
                 onChange={(e) => handleUsernameChange(e.target.value)}
                 className="w-full p-3 rounded-lg bg-gray-700 text-white border-none outline-none"
               />
             </FormControl>
             <div className="flex items-center mt-1">
-              {isChecking ? (
+              {isLoading ? (
                 <span className="text-yellow-400">Checking...</span>
-              ) : isAvailable === null ? (
+              ) : !data ? (
                 ""
-              ) : isAvailable ? (
+              ) : data?.isAvailable ? (
                 <span className="text-green-500">Username is available</span>
               ) : (
                 <span className="text-red-500">Username is taken</span>

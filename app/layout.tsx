@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./(main)/_components/Navbar";
 import { QueryClientProviderWrapper } from "@/components/QueryClientProviderWrapper";
+import ToastProvider from "@/components/ToastProvider";
+import { AuthProvider } from "@/context/AuthProvider";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -30,10 +32,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
         <QueryClientProviderWrapper>
-          <div className="border-b ">
-            <Navbar />
-          </div>
-          {children}
+          <AuthProvider>
+            <ToastProvider />
+            <div className="border-b ">
+              <Navbar />
+            </div>
+            {children}
+          </AuthProvider>
         </QueryClientProviderWrapper>
       </body>
     </html>

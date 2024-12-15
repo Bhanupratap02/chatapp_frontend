@@ -74,7 +74,9 @@ const rooms = [
       },
     ],
     totalPeople: 40,
-  },{},{}
+  },
+  {},
+  {},
 ];
 export default function Home() {
   // const router = useRouter();
@@ -108,19 +110,10 @@ export default function Home() {
                 My Feed
               </Button>
             </Link>
-
-            {/* <Button>
-              <PlusIcon className="text-white" />
-              Create a new room
-            </Button> */}
             <AddRoomButton />
           </div>
         </div>
-        <div
-          className={
-            "grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4 mt-10"
-          }
-        >
+        <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4 mt-10">
           {rooms.map((room) => (
             <RoomCard key={room.id} />
           ))}

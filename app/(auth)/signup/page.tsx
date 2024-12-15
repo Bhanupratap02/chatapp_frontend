@@ -4,13 +4,15 @@
 
 import { useState } from "react";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm,FormProvider } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, FormProvider } from "react-hook-form";
 import StepOne from "./_components/StepOne";
 import StepTwo from "./_components/Steptwo";
 import StepThree from "./_components/StepThree";
 import { Button } from "@/components/ui/button";
-
+import { useSignup } from "@/hooks/useSignup";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 // Define the validation schemas for each step
 const stepOneSchema = z.object({
   email: z.string().email("Invalid email address."),
@@ -25,17 +27,14 @@ const stepThreeSchema = z.object({
   profilePic: z.any().optional(),
 });
 // Combine schemas for final submission
-const combinedSchema = stepOneSchema.merge(stepTwoSchema).merge(stepThreeSchema);
-type FormData = z.infer<typeof combinedSchema>;
+const combinedSchema = stepOneSchema
+  .merge(stepTwoSchema)
+  .merge(stepThreeSchema);
+export type FormData = z.infer<typeof combinedSchema>;
 const Signup = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
-    username: "",
-    profilePic: null,
-  });
+   const router = useRouter();
+  const { mutate:signupUser, isPending,error} = useSignup();
   const formMethods = useForm<FormData>({
     resolver: zodResolver(
       step === 1 ? stepOneSchema : step === 2 ? stepTwoSchema : combinedSchema
@@ -49,20 +48,35 @@ const Signup = () => {
     },
     mode: "onTouched",
   });
- const { handleSubmit, trigger, getValues } = formMethods;
-   const handleNext = async () => {
-     const isValid = await trigger(); // Validate the current step
-     if (isValid) {
-       setStep((prev) => Math.min(prev + 1, 3));
-     }
-   };
+  const { handleSubmit, trigger } = formMethods;
+  const handleNext = async () => {
+    const isValid = await trigger(); // Trigger validation for current step
+    // console.log("Validation result for step", step, ":", isValid);
+    if (isValid) {
+      setStep((prev) => Math.min(prev + 1, 3));
+    } else {
+      console.log("Validation failed for step", step);
+    }
+  };
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 1));
-  // const handleChange = (field: string, value: any) =>
-  //   setFormData((prev) => ({ ...prev, [field]: value }));
 
   const onSubmit = (data: FormData) => {
-    console.log("Submitted Data:", data);
-    // Handle the form submission logic (e.g., API call).
+     if (step !== 3) return;
+    console.log("Submitted Data:", data,step);
+    signupUser(data, {
+      onSuccess: () => {
+        toast.success("Signup successful", {
+          style: {
+            background: "#1d1d1d",
+            color: "#fff",
+          },
+        });
+         router.push("/login");
+      },
+      onError: (error) => {
+        console.log("Signup failed:", error);
+      },
+    });
   };
 
   return (
@@ -73,7 +87,13 @@ const Signup = () => {
             <img src="/images/logo.png" alt="logo" />
             <h2 className="text-2xl font-semibold text-center ">Sign Up</h2>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {error && (
+            <p className="text-red-500 text-center py-2">
+              {error?.error || "An unexpected error occurred"}
+            </p>
+          )}
+
+          {/* <form> */}
             {step === 1 && <StepOne />}
             {step === 2 && <StepTwo />}
             {step === 3 && <StepThree />}
@@ -82,13 +102,19 @@ const Signup = () => {
                 disabled={step === 1}
                 variant="secondary"
                 onClick={handleBack}
+                type="button"
                 className="bg-gray-500 hover:bg-gray-600"
               >
                 Back
               </Button>
               {step === 3 ? (
-                <Button type="submit" className="bg-main2 hover:bg-violet-800">
-                  Submit
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  onClick={handleSubmit(onSubmit)}
+                  className="bg-main2 hover:bg-violet-800"
+                >
+                  {isPending ? "Submitting..." : "Submit"}
                 </Button>
               ) : (
                 <Button
@@ -100,7 +126,7 @@ const Signup = () => {
                 </Button>
               )}
             </div>
-          </form>
+          {/* </form> */}
           <p className="text-center mt-4 text-gray-400">
             Already have an account?{" "}
             <a href="/login" className="text-main2 hover:underline">
